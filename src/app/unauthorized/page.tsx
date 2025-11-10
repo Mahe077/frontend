@@ -15,7 +15,7 @@ export default function UnauthorizedPage() {
         <p className="text-muted-foreground mb-6">You don&apos;t have permission to access this resource.</p>
         <Button
           onClick={() => router.push("/dashboard")}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground"
+          className="bg-primary hover:bg-primary/50 text-primary-foreground"
         >
           Back to Dashboard
         </Button>

@@ -10,7 +10,7 @@ export interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
+  resetPassword: (resetToken: string, password: string) => Promise<void>;
   logout: () => void;
   hasPermission: (permissionName: string) => boolean;
   hasRole: (roleName: string) => boolean;
@@ -43,10 +43,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   useEffect(() => {
-    initializeApiClient(getAccessToken, getRefreshToken, logout);
+    initializeApiClient(getAccessToken, getRefreshToken, logout, setAccessToken);
     const initializeAuth = async () => {
       const storedRefreshToken = getRefreshToken();
-      if (storedRefreshToken) {
+      if (storedRefreshToken && storedRefreshToken !== "undefined") {
         try {
           const { accessToken } = await apiRefresh(storedRefreshToken);
           setAccessToken(accessToken);
@@ -54,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // const user = await apiGetUserProfile(accessToken);
           // setUser(user);
         } catch (error) {
+            console.error("Refresh token failed:", error);
           // Not logged in or refresh failed
           logout();
         }
@@ -79,10 +80,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const resetPassword = async (email: string) => {
+  const resetPassword = async (resetToken: string, password: string) => {
     setIsLoading(true);
     try {
-      await apiResetPassword(email);
+      await apiResetPassword(resetToken, password);
     } catch (error) {
       console.error("Reset password failed:", error);
       throw error;

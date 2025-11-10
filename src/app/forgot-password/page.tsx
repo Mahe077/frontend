@@ -1,124 +1,111 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import {useState, FormEvent} from "react";
 import Link from "next/link";
+import {motion} from "framer-motion";
+import {Button} from "@/components/ui/button";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {CheckCircle2} from "lucide-react";
+import {apiForgotPassword} from "@/lib/api-client";
+import {FormHeader} from "@/components/common/app-form/form-header";
+import {AppFormBody} from "@/components/common/app-form/app-form-body";
+import {AppButton} from "@/components/common/app-button";
+import {AppDiv} from "@/components/common/app-div";
+import {AppCard} from "@/components/common/app-form/app-card";
+import {FormFooter} from "@/components/common/app-form/form-footer";
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("")
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const router = useRouter()
+    const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
-    setIsSuccess(false)
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        setError("");
+        setIsLoading(true);
+        setIsSuccess(false);
 
-    try {
-      // await apiForgotPassword(email) // Placeholder for the actual API call
-      setIsSuccess(true)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to send reset link. Please try again.")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-  
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-secondary/20 p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary mb-4">
-            <span className="text-xl font-bold text-primary-foreground">
-              Rx
-            </span>
-          </div>
-          <h1 className="text-3xl font-bold text-foreground">
-            Forgot Password
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Enter your email to receive a password reset link
-          </p>
-        </div>
+        try {
+            await apiForgotPassword(email);
+            setIsSuccess(true);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Failed to send reset link. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-        <Card className="border-border shadow-lg">
-          <CardHeader>
-            <CardTitle>Reset Password</CardTitle>
-            <CardDescription>
-              We'll email you a link to reset your password
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isSuccess ? (
-              <div className="text-center">
-                <p className="text-green-600">
-                  A password reset link has been sent to your email.
-                </p>
-                <Link href="/login" className="text-primary hover:underline mt-4 block">
-                  Back to Sign In
-                </Link>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-foreground font-medium">
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="bg-input border-border focus:ring-primary"
-                  />
-                </div>
+    return (
+        <div
+            className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-secondary/20 dark:from-primary/10 dark:via-background dark:to-secondary/10 transition-colors duration-300 p-4">
+            <motion.div
+                initial={{opacity: 0, y: 10}}
+                animate={{opacity: 1, y: 0}}
+                className="w-full max-w-md"
+            >
+                {/* Header */}
+                <FormHeader
+                    title={"Forgot Password"}
+                    subtitle={"Enter your registered email to receive a password reset link."}
+                />
 
-                {error && (
-                  <Alert
-                    variant="destructive"
-                    className="bg-destructive/10 border-destructive/30"
-                  >
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
-
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-primary hover:bg-primary/90"
+                {/* Card */}
+                <AppCard
+                    bodyTitle={"Reset Your Password"}
+                    bodySubtitle={"You’ll receive a secure link to create a new password"}
+                    footerText={"Remember your password?"}
+                    footerLinkText={"Sign In"}
+                    footerHref="/login"
                 >
-                  {isLoading ? "Sending..." : "Send Reset Link"}
-                </Button>
-              </form>
-            )}
+                    {isSuccess ? (
+                        <AppDiv
+                            motionKey="success"
+                        >
+                            <Alert variant="success" className="mb-4 dark:border-green-700 dark:bg-green-900/20">
+                                <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400"/>
+                                <AlertTitle className="font-semibold">Email Sent!</AlertTitle>
+                                <AlertDescription>
+                                    A password reset link has been sent to <b>{email}</b>
+                                </AlertDescription>
+                            </Alert>
 
-            <div className="mt-6 text-center text-sm">
-              <p className="text-muted-foreground">
-                Remember your password?{" "}
-                <Link href="/login" className="text-primary hover:underline">
-                  Sign In
-                </Link>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+                            <Button asChild className="w-full bg-primary hover:bg-primary/50">
+                                <Link href="/login">Return to Sign In</Link>
+                            </Button>
+                        </AppDiv>
+                    ) : (
+                        <AppFormBody handleSubmit={handleSubmit} error={error}>
+                            <div className="space-y-2">
+                                <Label htmlFor="email" className="text-foreground font-medium">
+                                    Email address
+                                </Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="you@example.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    disabled={isLoading}
+                                    className="bg-input border-border focus:ring-primary transition-colors duration-300"
+                                />
+                            </div>
 
-        <p className="text-center text-sm text-muted-foreground mt-8">
-          Pharmacy Management System &copy; 2025
-        </p>
-      </div>
-    </div>
-  );
+                            <AppButton
+                                isLoading={isLoading}
+                                loadingText={"Sending..."}
+                            >
+                                Save Changes
+                            </AppButton>
+                        </AppFormBody>
+                    )}
+                </AppCard>
+
+                <FormFooter/>
+            </motion.div>
+        </div>
+    );
 }

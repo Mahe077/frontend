@@ -18,7 +18,8 @@ const createCustomFetch = (
   getAccessToken: () => string | null,
   getRefreshToken: () => string | null,
   logout: () => void,
-  apiRefresh: (refreshToken: string) => Promise<{ accessToken: string }>
+  apiRefresh: (refreshToken: string) => Promise<{ accessToken: string }>,
+  setAccessToken: (token: string) => void
 ) => {
   return async (url: string, options: RequestInit) => {
     const token = getAccessToken();
@@ -41,11 +42,12 @@ const createCustomFetch = (
               logout();
               return Promise.reject(new Error("No refresh token available"));
             }
-            const { accessToken } = await apiRefresh(refreshToken);
-            processQueue(null, accessToken);
+            const { accessToken: newAccessToken } = await apiRefresh(refreshToken);
+            setAccessToken(newAccessToken);
+            processQueue(null, newAccessToken);
             options.headers = {
               ...options.headers,
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${newAccessToken}`,
             };
             return await fetch(url, options);
           } catch (error) {

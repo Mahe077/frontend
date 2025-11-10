@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { apiSignup } from "@/lib/api-client";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("")
@@ -30,7 +31,7 @@ export default function SignupPage() {
     }
 
     try {
-      // await apiSignup(email, password) // Placeholder for the actual API call
+      await apiSignup(email, password)
       router.push("/login")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed. Please try again.")
@@ -129,7 +130,7 @@ export default function SignupPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-primary hover:bg-primary/90"
+                className="w-full bg-primary hover:bg-primary/50"
               >
                 {isLoading ? "Signing up..." : "Sign Up"}
               </Button>
@@ -138,7 +139,7 @@ export default function SignupPage() {
             <div className="mt-6 text-center text-sm">
               <p className="text-muted-foreground">
                 Already have an account?{" "}
-                <Link href="/login" className="text-primary hover:underline">
+                <Link href="/login" className="text-primary hover:text-primary/80">
                   Sign In
                 </Link>
               </p>

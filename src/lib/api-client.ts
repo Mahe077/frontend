@@ -6,9 +6,10 @@ let customFetch: (url: string, options: RequestInit) => Promise<Response>;
 export const initializeApiClient = (
   getAccessToken: () => string | null,
   getRefreshToken: () => string | null,
-  logout: () => void
+  logout: () => void,
+  setAccessToken: (token: string) => void
 ) => {
-  customFetch = createCustomFetch(getAccessToken, getRefreshToken, logout, apiRefresh);
+  customFetch = createCustomFetch(getAccessToken, getRefreshToken, logout, apiRefresh, setAccessToken);
 };
 
 export async function apiLogin(
@@ -28,12 +29,13 @@ export async function apiLogin(
     throw new Error(errorData.message || "Login failed");
   }
 
-  const data = await response.json();
-  return { user: data.user, accessToken: data.accessToken, refreshToken: data.refreshToken };
+  const responseData = await response.json();
+  const { user, accessToken, refreshToken } = responseData.data;
+  return { user, accessToken, refreshToken };
 }
 
 export async function apiRefresh(refreshToken: string): Promise<{ accessToken: string }> {
-  const response = await customFetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -51,19 +53,24 @@ export async function apiRefresh(refreshToken: string): Promise<{ accessToken: s
 }
 
 export async function apiSignup(email: string, password: string): Promise<void> {
-  // Placeholder function
-  console.log("apiSignup called with:", email, password);
-  return Promise.resolve();
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Registration failed");
+  }
+
+  return;
 }
 
 export async function apiForgotPassword(email: string): Promise<void> {
-  // Placeholder function
-  console.log("apiForgotPassword called with:", email);
-  return Promise.resolve();
-}
-
-export async function apiResetPassword(email: string): Promise<void> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/forgot-password`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -73,8 +80,33 @@ export async function apiResetPassword(email: string): Promise<void> {
 
   if (!response.ok) {
     const errorData = await response.json();
+    throw new Error(errorData.message || "Forgot password failed");
+  }
+
+  return;
+}
+
+export async function apiResetPassword(resetToken: string, newPassword: string): Promise<void> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ token: resetToken, newPassword }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
     throw new Error(errorData.message || "Reset password failed");
   }
 
   return;
+}
+
+export async function apiValidateResetToken(token: string): Promise<boolean> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/validate-reset-token?token=${token}`, {
+    method: "GET",
+  });
+
+  return response.ok;
 }
