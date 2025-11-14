@@ -97,6 +97,7 @@ export default function ForgotPasswordPage() {
                             <AppButton
                                 isLoading={isLoading}
                                 loadingText={"Sending..."}
+                                disabled={isLoading}
                             >
                                 Save Changes
                             </AppButton>

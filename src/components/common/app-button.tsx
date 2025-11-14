@@ -6,13 +6,14 @@ interface AppButtonProps {
     isLoading?: boolean;
     loadingText?: string;
     children: ReactNode;
+    disabled?: boolean;
 }
 
-export function AppButton({isLoading, loadingText, children}: AppButtonProps) {
+export function AppButton({isLoading, loadingText, children, disabled}: AppButtonProps) {
     return (
         <Button
             type="submit"
-            disabled={isLoading}
+            disabled={disabled}
             className="w-full bg-primary hover:bg-primary/50 transition-all flex items-center justify-center gap-2"
         >
             {isLoading ? (

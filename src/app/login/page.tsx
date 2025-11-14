@@ -12,12 +12,14 @@ import {motion} from "motion/react";
 import {AppCard} from "@/components/common/app-form/app-card";
 import {AppFormBody} from "@/components/common/app-form/app-form-body";
 import {AppButton} from "@/components/common/app-button";
+import {Eye, EyeOff} from "lucide-react";
 
 export default function LoginPage() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const [isLoading, setIsLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
     const {login, isAuthenticated} = useAuth()
     const router = useRouter()
 
@@ -89,15 +91,24 @@ export default function LoginPage() {
                                 >
                                     Password
                                 </Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    className="bg-input border-border focus:ring-primary"
-                                />
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="••••••••"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        className="bg-input border-border focus:ring-primary"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Forgot Password Link */}
@@ -111,6 +122,7 @@ export default function LoginPage() {
                             <AppButton
                                 isLoading={isLoading}
                                 loadingText={"Sign in..."}
+                                disabled={isLoading}
                             >
                                 Sign In
                             </AppButton>

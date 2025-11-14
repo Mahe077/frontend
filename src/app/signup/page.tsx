@@ -1,156 +1,181 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { apiSignup } from "@/lib/api-client";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {AlertCircle, Eye, EyeOff} from "lucide-react";
+import {Alert, AlertDescription} from "@/components/ui/alert";
+import {FormEvent, useState} from "react";
+import {useRouter} from "next/navigation";
+import {apiSignup} from "@/lib/api-client";
+import {usePasswordValidationRules} from "@/hooks/usePasswordValidationRules";
+import {PasswordStrengthIndicator} from "@/components/common/password-strength-indicator";
+import {AppButton} from "@/components/common/app-button";
+import {motion} from "motion/react";
+import {FormHeader} from "@/components/common/app-form/form-header";
+import {AppCard} from "@/components/common/app-form/app-card";
+import {FormFooter} from "@/components/common/app-form/form-footer";
+import {AppFormBody} from "@/components/common/app-form/app-form-body";
 
 export default function SignupPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+    const [error, setError] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
+    const router = useRouter()
+    const passwordValidationRules = usePasswordValidationRules();
+    const areAllRulesValid = passwordValidationRules.every((rule) => rule.regex.test(password));
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match")
-      setIsLoading(false)
-      return
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault()
+        setError("")
+        setIsLoading(true)
+
+        if (password !== confirmPassword) {
+            setError("Passwords do not match")
+            setIsLoading(false)
+            return
+        }
+
+        if (!areAllRulesValid) {
+            setError("Please ensure your password meets all the requirements.");
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            await apiSignup(email, password)
+            router.push("/login")
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Registration failed. Please try again.")
+        } finally {
+            setIsLoading(false)
+        }
     }
 
-    try {
-      await apiSignup(email, password)
-      router.push("/login")
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed. Please try again.")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-  
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-secondary/20 p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary mb-4">
-            <span className="text-xl font-bold text-primary-foreground">
-              Rx
-            </span>
-          </div>
-          <h1 className="text-3xl font-bold text-foreground">
-            Create an Account
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Join the Pharmacy System today
-          </p>
-        </div>
-
-        <Card className="border-border shadow-lg">
-          <CardHeader>
-            <CardTitle>Sign Up</CardTitle>
-            <CardDescription>
-              Enter your details to create an account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground font-medium">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="bg-input border-border focus:ring-primary"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label
-                  htmlFor="password"
-                  className="text-foreground font-medium"
+    return (
+        <div
+            className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-secondary/20 p-4">
+            <div className="w-full max-w-md">
+                <motion.div
+                    initial={{opacity: 0, y: 10}}
+                    animate={{opacity: 1, y: 0}}
+                    className="w-full max-w-md"
                 >
-                  Password
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="bg-input border-border focus:ring-primary"
-                />
-              </div>
+                    <FormHeader
+                        title={"Create an Account"}
+                        subtitle={"Join the Pharmacy System today"}
+                    />
 
-              <div className="space-y-2">
-                <Label
-                  htmlFor="confirmPassword"
-                  className="text-foreground font-medium"
-                >
-                  Confirm Password
-                </Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  className="bg-input border-border focus:ring-primary"
-                />
-              </div>
+                    <AppCard
+                        bodyTitle={"Sign Up"}
+                        bodySubtitle={"Enter your details to create an account"}
+                        footerText={"Already have an account?"}
+                        footerLinkText={"Sign In"}
+                        footerHref="/login"
+                    >
+                        <AppFormBody handleSubmit={handleSubmit} error={error}>
+                            <div className="space-y-2">
+                                <Label htmlFor="email" className="text-foreground font-medium">
+                                    Email
+                                </Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="you@example.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    className="bg-input border-border focus:ring-primary"
+                                />
+                            </div>
 
-              {error && (
-                <Alert
-                  variant="destructive"
-                  className="bg-destructive/10 border-destructive/30"
-                >
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+                            <div className="space-y-2">
+                                <Label
+                                    htmlFor="password"
+                                    className="text-foreground font-medium"
+                                >
+                                    Password
+                                </Label>
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="••••••••"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                        className="bg-input border-border focus:ring-primary pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
+                                    </button>
+                                </div>
+                            </div>
 
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-primary hover:bg-primary/50"
-              >
-                {isLoading ? "Signing up..." : "Sign Up"}
-              </Button>
-            </form>
+                            <div className="space-y-2">
+                                <Label
+                                    htmlFor="confirmPassword"
+                                    className="text-foreground font-medium"
+                                >
+                                    Confirm Password
+                                </Label>
+                                <div className="relative">
+                                    <Input
+                                        id="confirmPassword"
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        placeholder="••••••••"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        required
+                                        className="bg-input border-border focus:ring-primary pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    >
+                                        {showConfirmPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
+                                    </button>
+                                </div>
+                            </div>
 
-            <div className="mt-6 text-center text-sm">
-              <p className="text-muted-foreground">
-                Already have an account?{" "}
-                <Link href="/login" className="text-primary hover:text-primary/80">
-                  Sign In
-                </Link>
-              </p>
+                            {error && (
+                                <Alert
+                                    variant="destructive"
+                                    className="bg-destructive/10 border-destructive/30"
+                                >
+                                    <AlertCircle className="h-4 w-4"/>
+                                    <AlertDescription>{error}</AlertDescription>
+                                </Alert>
+                            )}
+
+                            <AppButton
+                                isLoading={isLoading}
+                                loadingText={"Sign up..."}
+                                disabled={!areAllRulesValid || isLoading}
+                            >
+                                Sign Up
+                            </AppButton>
+
+                            <div className="my-4">
+                                <PasswordStrengthIndicator password={password} rules={passwordValidationRules}/>
+                            </div>
+
+                        </AppFormBody>
+                    </AppCard>
+                    <FormFooter/>
+                </motion.div>
             </div>
-          </CardContent>
-        </Card>
-
-        <p className="text-center text-sm text-muted-foreground mt-8">
-          Pharmacy Management System &copy; 2025
-        </p>
-      </div>
-    </div>
-  );
+        </div>
+    )
+        ;
 }
