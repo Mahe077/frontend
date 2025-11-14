@@ -52,13 +52,15 @@ export async function apiRefresh(refreshToken: string): Promise<{ accessToken: s
   return { accessToken: data.accessToken };
 }
 
-export async function apiSignup(email: string, password: string): Promise<void> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+import { CreateUserInput } from "./validation-schemas";
+
+export async function apiSignup(data: CreateUserInput): Promise<void> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify(data),
   });
 
   if (!response.ok) {
