@@ -26,11 +26,6 @@ const headerStyle: React.CSSProperties = {
   marginBottom: "24px",
 };
 
-const logoStyle: React.CSSProperties = {
-  height: "40px",
-  width: "auto",
-};
-
 const headingStyle: React.CSSProperties = {
   fontSize: "24px",
   fontWeight: "bold",

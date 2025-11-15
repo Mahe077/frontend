@@ -112,3 +112,33 @@ export async function apiValidateResetToken(token: string): Promise<boolean> {
 
   return response.ok;
 }
+
+export async function apiVerifyEmail(token: string): Promise<void> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify-email?token=${token}`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Email verification failed");
+  }
+
+  return;
+}
+
+export async function apiResendVerificationEmail(email: string): Promise<void> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/resend-verification-email`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to resend verification email");
+  }
+
+  return;
+}

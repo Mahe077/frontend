@@ -25,6 +25,8 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { AppCalendar } from "@/components/common/app-calendar";
+import {PasswordStrengthIndicator} from "@/components/common/password-strength-indicator";
+import {usePasswordValidationRules} from "@/hooks/usePasswordValidationRules";
 
 type Step = 1 | 2 | 3;
 
@@ -35,6 +37,7 @@ export default function SignupPage() {
     const [showPassword, setShowPassword] = useState(false);
 
     const router = useRouter();
+    const passwordValidationRules = usePasswordValidationRules();
 
     const {
         register,
@@ -42,6 +45,7 @@ export default function SignupPage() {
         formState: { errors, isValid },
         trigger,
         control,
+        watch,
     } = useForm<CreateUserInput>({
         resolver: zodResolver(CreateUserSchema),
         mode: "onChange",
@@ -50,6 +54,8 @@ export default function SignupPage() {
             roles: ["CUSTOMER"],
         },
     });
+
+    const password = watch("password", "");
 
     const nextStep = async () => {
         const fields: (keyof CreateUserInput)[] =
@@ -71,7 +77,7 @@ export default function SignupPage() {
         setError("");
         try {
             await apiSignup(data);
-            router.push("/login");
+            router.push(`/validate-email?email=${data.email}`);
         } catch (err) {
             setError(
                 err instanceof Error ? err.message : "Registration failed. Please try again."
@@ -148,6 +154,10 @@ export default function SignupPage() {
                                         {errors.password && (
                                             <p className="text-red-500 text-sm">{errors.password.message}</p>
                                         )}
+                                    </div>
+
+                                    <div className="my-4">
+                                        <PasswordStrengthIndicator password={password} rules={passwordValidationRules} />
                                     </div>
                                 </>
                             )}
@@ -267,18 +277,17 @@ export default function SignupPage() {
                                 </>
                             )}
 
-                            <div className="flex justify-between">
-                                {step > 1 && step < 3 && (
+                            <div className="flex flex-col space-y-4">
+                                {step > 1 && (
                                     <Button type="button" onClick={prevStep}>
                                         Back
                                     </Button>
                                 )}
-                                {step < 3 && (
-                                    <Button type="button" onClick={nextStep} className="ml-auto">
+                                {step < 3 ? (
+                                    <Button type="button" onClick={nextStep}>
                                         Next
                                     </Button>
-                                )}
-                                {step === 3 && (
+                                ) : (
                                     <AppButton
                                         isLoading={isLoading}
                                         loadingText={"Signing up..."}
