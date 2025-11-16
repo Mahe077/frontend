@@ -58,4 +58,5 @@ export interface User {
     loyaltyCardNumber: string | null
     loyaltyPoints: number | null
     memberSince: Date | null
+    permissions: string[]
 }

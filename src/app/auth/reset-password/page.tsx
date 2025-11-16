@@ -79,7 +79,7 @@ function ResetPasswordComponent() {
                         Your password has been reset successfully.
                     </p>
                     <Link
-                        href="/login"
+                        href="/auth/login"
                         className="text-primary hover:text-primary/80 mt-4 block"
                     >
                         Back to Sign In
@@ -175,7 +175,7 @@ function ResetPasswordComponent() {
                         bodySubtitle={"Choose a strong password"}
                         footerText={"Remember your password?"}
                         footerLinkText={"Sign In"}
-                        footerHref="/login"
+                        footerHref="/auth/login"
                     >
                         {renderContent()}
                     </AppCard>

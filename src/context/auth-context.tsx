@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setAccessToken(null);
     sessionStorage.removeItem("refreshToken");
-    router.push("/login");
+    router.push("/auth/login");
   }, [router]);
 
   useEffect(() => {
@@ -93,10 +93,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const hasPermission = (permissionName: string): boolean => {
-    if (!user) return false;
-    return user.roles.some((role) =>
-      role.permissions.some((permission) => permission.name === permissionName)
-    );
+    if (!user || !user.permissions) return false;
+    return user.permissions.includes(permissionName);
   };
 
   const hasRole = (roleName: string): boolean => {

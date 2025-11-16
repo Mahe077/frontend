@@ -89,7 +89,7 @@ const ValidateEmailPage = () => {
                   asChild
                   className="w-full bg-primary hover:bg-primary/50"
                 >
-                  <Link href="/login">Return to Sign In</Link>
+                  <Link href="/auth/login">Return to Sign In</Link>
                 </Button>
 
                 <AppButton

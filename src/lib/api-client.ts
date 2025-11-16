@@ -30,7 +30,8 @@ export async function apiLogin(
   }
 
   const responseData = await response.json();
-  const { user, accessToken, refreshToken } = responseData.data;
+  const { user, accessToken, refreshToken, permissions } = responseData.data;
+  user.permissions = permissions;
   return { user, accessToken, refreshToken };
 }
 

@@ -58,7 +58,7 @@ export default function ForgotPasswordPage() {
                     bodySubtitle={"You’ll receive a secure link to create a new password"}
                     footerText={"Remember your password?"}
                     footerLinkText={"Sign In"}
-                    footerHref="/login"
+                    footerHref="/auth/login"
                 >
                     {isSuccess ? (
                         <AppDiv
@@ -73,7 +73,7 @@ export default function ForgotPasswordPage() {
                             </Alert>
 
                             <Button asChild className="w-full bg-primary hover:bg-primary/50">
-                                <Link href="/login">Return to Sign In</Link>
+                                <Link href="/auth/login">Return to Sign In</Link>
                             </Button>
                         </AppDiv>
                     ) : (

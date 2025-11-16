@@ -64,7 +64,7 @@ export default function LoginPage() {
                         bodySubtitle={"Enter your credentials to access the system"}
                         footerText={"Don't have an account?"}
                         footerLinkText={"Sign Up"}
-                        footerHref="/signup"
+                        footerHref="/auth/signup"
                     >
                         <AppFormBody handleSubmit={handleSubmit} error={error}>
                             {/* Username Field */}
@@ -113,7 +113,7 @@ export default function LoginPage() {
 
                             {/* Forgot Password Link */}
                             <div className="text-sm text-right">
-                                <Link href="/forgot-password" className="text-primary hover:text-primary/80">
+                                <Link href="/auth/forgot-password" className="text-primary hover:text-primary/80">
                                     Forgot your password?
                                 </Link>
                             </div>

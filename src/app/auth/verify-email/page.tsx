@@ -83,7 +83,7 @@ const VerifyEmailPage = () => {
                                     isLoading={false}
                                     loadingText={"Signing up..."}
                                     disabled={false}
-                                    onClick={async () => { await router.push("/login"); }}
+                                    onClick={async () => { await router.push("/auth/login"); }}
                                 >
                                         Go to Login
                                 </AppButton></>
@@ -99,7 +99,7 @@ const VerifyEmailPage = () => {
                                     isLoading={false}
                                     loadingText={"Signing up..."}
                                     disabled={false}
-                                    onClick={async () => { await router.push("/signup"); }}
+                                    onClick={async () => { await router.push("/auth/signup"); }}
                                 >
                                     Back to Signup
                                 </AppButton></>

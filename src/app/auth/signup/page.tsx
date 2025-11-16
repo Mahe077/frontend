@@ -77,7 +77,7 @@ export default function SignupPage() {
         setError("");
         try {
             await apiSignup(data);
-            router.push(`/validate-email?email=${data.email}`);
+            router.push(`/auth/validate-email?email=${data.email}`);
         } catch (err) {
             setError(
                 err instanceof Error ? err.message : "Registration failed. Please try again."
@@ -105,7 +105,7 @@ export default function SignupPage() {
                         bodySubtitle={`Step ${step} of 3`}
                         footerText={"Already have an account?"}
                         footerLinkText={"Sign In"}
-                        footerHref="/login"
+                        footerHref="/auth/login"
                     >
                         <AppFormBody handleSubmit={handleSubmit(onSubmit)} error={error}>
                             {step === 1 && (
