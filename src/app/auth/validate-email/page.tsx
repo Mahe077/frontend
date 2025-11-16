@@ -10,8 +10,8 @@ import { CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { apiResendVerificationEmail } from "@/lib/api-client";
 import { AppButton } from "@/components/common/app-button";
+import {apiResendVerificationEmail} from "@/lib/apis/auth";
 
 const ValidateEmailPage = () => {
   const searchParams = useSearchParams();

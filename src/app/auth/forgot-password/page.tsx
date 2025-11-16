@@ -8,13 +8,13 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {CheckCircle2} from "lucide-react";
-import {apiForgotPassword} from "@/lib/api-client";
 import {FormHeader} from "@/components/common/app-form/form-header";
 import {AppFormBody} from "@/components/common/app-form/app-form-body";
 import {AppButton} from "@/components/common/app-button";
 import {AppDiv} from "@/components/common/app-div";
 import {AppCard} from "@/components/common/app-form/app-card";
 import {FormFooter} from "@/components/common/app-form/form-footer";
+import {apiForgotPassword} from "@/lib/apis/auth";
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState("");

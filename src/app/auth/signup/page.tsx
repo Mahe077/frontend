@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { apiSignup } from "@/lib/api-client";
 import { FormHeader } from "@/components/common/app-form/form-header";
 import { AppCard } from "@/components/common/app-form/app-card";
 import { FormFooter } from "@/components/common/app-form/form-footer";
@@ -27,6 +26,7 @@ import {
 import { AppCalendar } from "@/components/common/app-calendar";
 import {PasswordStrengthIndicator} from "@/components/common/password-strength-indicator";
 import {usePasswordValidationRules} from "@/hooks/usePasswordValidationRules";
+import {apiSignup} from "@/lib/apis/auth";
 
 type Step = 1 | 2 | 3;
 

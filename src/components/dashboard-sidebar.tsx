@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/sidebar";
 import {useAuth} from "@/context/auth-context";
 import {AlertCircle, BarChart3, FileText, LayoutDashboard, Package, Settings, Users} from "lucide-react";
-import {UserMenu} from "@/components/common/auth-context-client";
+import {UserMenu} from "@/components/common/user-menu";
 
 interface NavItem {
     title: string
@@ -19,16 +19,21 @@ interface NavItem {
 }
 
 export function DashboardSidebar() {
-    const {user} = useAuth();
+    const {user, isLoading} = useAuth();
 
-    console.log(user);
+    if (user) {
+        console.log(user);
+    }
+
+    if (isLoading) {
+        return null; // Or a loading spinner/skeleton
+    }
 
     const navigationItems: NavItem[] = [
         {
             title: "Overview",
             icon: <LayoutDashboard className="h-4 w-4" />,
             href: "/dashboard",
-            entity: "user", // Example entity
         },
         {
             title: "Inventory",
@@ -40,7 +45,7 @@ export function DashboardSidebar() {
             title: "Customers",
             icon: <Users className="h-4 w-4" />,
             href: "/dashboard/customers",
-            entity: "customer", // Example entity
+            entity: "user", // Example entity
         },
         {
             title: "Prescriptions",
@@ -81,7 +86,7 @@ export function DashboardSidebar() {
     return (
         <Sidebar variant="sidebar">
             <SidebarHeader className="border-b border-sidebar-border">
-                <div className="flex items-center gap-2 px-2">
+                <div className="flex items-center gap-2 px-2 pb-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-md bg-sidebar-primary">
                         <span className="text-xs font-bold text-sidebar-primary-foreground">Rx</span>
                     </div>
@@ -91,12 +96,12 @@ export function DashboardSidebar() {
             </SidebarHeader>
 
 
-            <SidebarContent>
+            <SidebarContent className="mt-2">
                 <SidebarMenu>
                     {visibleItems.map((item) => (
                         <SidebarMenuItem key={item.href}>
                             <SidebarMenuButton asChild tooltip={item.title}>
-                                <a href={item.href} className="flex items-center gap-2">
+                                <a href={item.href} className="flex items-center gap-2 text-primary-foreground">
                                     {item.icon}
                                     <span>{item.title}</span>
                                 </a>

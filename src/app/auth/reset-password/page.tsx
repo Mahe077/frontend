@@ -5,7 +5,6 @@ import {Input} from "@/components/ui/input";
 import {FormEvent, Suspense, useState} from "react";
 import {useSearchParams} from "next/navigation";
 import Link from "next/link";
-import {apiResetPassword} from "@/lib/api-client";
 import {FormHeader} from "@/components/common/app-form/form-header";
 import {motion} from "motion/react";
 import {FormFooter} from "@/components/common/app-form/form-footer";
@@ -17,6 +16,7 @@ import {PasswordStrengthIndicator} from "@/components/common/password-strength-i
 
 import { Eye, EyeOff } from "lucide-react";
 import {usePasswordValidationRules} from "@/hooks/usePasswordValidationRules";
+import {apiResetPassword} from "@/lib/apis/auth";
 
 function ResetPasswordComponent() {
     const [password, setPassword] = useState("");

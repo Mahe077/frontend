@@ -2,7 +2,6 @@
 
 import {useState, useEffect, useRef, useCallback} from "react";
 import {useSearchParams, useRouter} from "next/navigation";
-import {apiVerifyEmail} from "@/lib/api-client";
 import {AppCard} from "@/components/common/app-form/app-card";
 import {FormHeader} from "@/components/common/app-form/form-header";
 import {AppDiv} from "@/components/common/app-div";
@@ -10,6 +9,7 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {CheckCircle2, AlertCircle, Loader} from "lucide-react";
 import {motion} from "motion/react";
 import {AppButton} from "@/components/common/app-button";
+import {apiVerifyEmail} from "@/lib/apis/auth";
 
 const VerifyEmailPage = () => {
     const searchParams = useSearchParams();

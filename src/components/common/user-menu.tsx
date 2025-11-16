@@ -28,14 +28,14 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+        <Button variant="ghost" className="relative h-10 w-10 rounded-full ">
           <Avatar className="h-10 w-10">
             {/*<AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />*/}
             <AvatarFallback className="bg-primary/20">{user.username.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="w-56 bg-white">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{user.username}</p>
@@ -47,12 +47,12 @@ export function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer">
-          <UserIcon className="mr-2 h-4 w-4" />
+          <UserIcon className="mr-2 h-4 w-4 hover:text-gray-400" />
           <span>Profile</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer text-destructive" onClick={handleLogout}>
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="mr-2 h-4 w-4 hover:text-gray-400" />
           <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
