@@ -18,6 +18,10 @@ export enum UserStatus {
     TERMINATED = "TERMINATED",
 }
 
+export enum UserRole {
+    ADMIN = "ADMIN",
+}
+
 export interface UserType {
     CUSTOMER: "CUSTOMER"
     EMPLOYEE: "EMPLOYEE"
@@ -44,7 +48,7 @@ export interface User {
     dateOfJoining: Date
     branchId: string
     branchName: string
-    roles: Role[]
+    roles: string[]
     status: keyof UserStatus
     isEmailVerified: boolean
     isPhoneVerified: boolean

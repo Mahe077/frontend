@@ -2,8 +2,9 @@
 
 import { User } from "@/lib/enums";
 import React, {useCallback, useEffect} from "react";
-import {initializeApiClient, apiLogin, apiRefresh, apiResetPassword} from "@/lib/api-client";
+import {initializeApiClient} from "@/lib/api-client";
 import { useRouter } from "next/navigation";
+import {apiLogin, apiRefresh, apiResetPassword} from "@/lib/apis/auth";
 
 export interface AuthContextType {
   user: User | null;
