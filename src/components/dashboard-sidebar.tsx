@@ -73,6 +73,8 @@ export function DashboardSidebar() {
         },
     ]
 
+    console.log(user);
+
     const visibleItems = navigationItems.filter(({entity}) => {
         if (!entity) return true; // item visible to everyone
         if (!user || !user.permissions) return false;

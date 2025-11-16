@@ -50,6 +50,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           const { accessToken } = await apiRefresh(storedRefreshToken);
           setAccessToken(accessToken);
+          const storedUser = sessionStorage.getItem("user");
+          if (storedUser) {
+            setUser(JSON.parse(storedUser));
+          }
           // You might want to fetch the user profile here as well
           // const user = await apiGetUserProfile(accessToken);
           // setUser(user);
@@ -71,6 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(user);
       setAccessToken(accessToken);
       sessionStorage.setItem("refreshToken", refreshToken);
+      sessionStorage.setItem("user", JSON.stringify(user));
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
